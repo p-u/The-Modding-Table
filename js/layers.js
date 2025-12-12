@@ -1,5 +1,3 @@
-// --- CONFIGURATION ---
-// 1. Fixed Rules (Offsets 4, 8, 12... to 40)
 const fixedRules = [
     { offset: 4, mult: 2 },
     { offset: 8, mult: 3 },
@@ -13,18 +11,28 @@ const fixedRules = [
     { offset: 40, mult: 20 },
 ];
 
-// Helper to get multiplier based on offset
 function getMultForOffset(offset) {
-    // Check fixed rules first
     let rule = fixedRules.find(r => r.offset === offset);
     if (rule) return rule.mult;
-    
-    // Check dynamic rules (offset >= 44, in steps of 4)
-    // Formula: For offset >= 44 (and offset % 4 === 0), mult = offset / 2
     if (offset >= 44 && offset % 4 === 0) {
         return offset / 2;
     }
     return 0;
+}
+
+function getMaxAutomatedLayer() {
+    let maxAutomated = 0;
+    for (let T = 10; T <= 100; T++) {
+        let triggerLayerID = "layer" + T;
+        if (player[triggerLayerID] && hasUpgrade(triggerLayerID, 11)) {
+            let currentLayerAutomated = Math.floor((T - 5) / 5);
+            
+            if (currentLayerAutomated > maxAutomated) {
+                maxAutomated = currentLayerAutomated;
+            }
+        }
+    }
+    return maxAutomated;
 }
 
 function getRandomColor() {
@@ -36,7 +44,6 @@ function getRandomColor() {
     return color;
 }
 
-// Explicitly define all layer IDs to prevent initialization errors
 var ALL_LAYERS = ["points"];
 for (let i = 1; i <= 100; i++) {
     ALL_LAYERS.push("layer" + i);
@@ -60,10 +67,16 @@ for (let i = 1; i <= 100; i++) {
             upgradeDesc += ` Also x${mult} ${targetName} gain.`;
         }
     }
-    if (i >= 10 && i % 5 === 0) {
-        let targetLayerNum = (i / 5) - 1; 
-        if (targetLayerNum >= 1) {
-             upgradeDesc += ` Automates and passively generates Layer ${targetLayerNum} upgrades.`;
+    if (i >= 10) {
+        let maxTargetLayer = Math.floor((i - 5) / 5); 
+        if (maxTargetLayer >= 1) {
+             let targetRange;
+             if (maxTargetLayer === 1) {
+                 targetRange = `Layer 1`; 
+             } else {
+                 targetRange = `Layers 1 through ${maxTargetLayer}`;
+             }
+             upgradeDesc += ` Also, this upgrade enables Passive Generation and Auto Upgrade for ${targetRange}.`;
         }
     }
 
@@ -71,18 +84,15 @@ for (let i = 1; i <= 100; i++) {
     addLayer(layerID, {
         name: "Layer " + i,
         symbol: "L" + i,
-        small: true,
         position: 0, 
-        nodeStyle: {"font-size": "15px", "height": "30px"},
-        style: {}, // Required for stability
-        branches: [], // Required for stability (disables complex tree drawing)
+        style: {}, 
+        branches: [], 
 
         startData() { return {
             unlocked: (i === 1),
             points: new Decimal(0),
         }},
         
-        // Custom microtabs structure for layout stability
         microtabs:{
             tab:{
                 "main":{
@@ -122,31 +132,18 @@ for (let i = 1; i <= 100; i++) {
 
         // 4. Automation and Passive Generation Logic
         passiveGeneration() {
-            // Target layer i is automated by trigger layer T = (i + 1) * 5
-            let triggerLayerNum = (i + 1) * 5; 
-            
-            // Check for the New Automation Rule (Triggered by L10, L15, L20, etc.)
-            if (triggerLayerNum <= 100 && triggerLayerNum >= 10) {
-                let triggerLayerID = "layer" + triggerLayerNum;
-                // If the trigger layer's upgrade is bought, return 1 (100% passive gen)
-                if (player[triggerLayerID] && hasUpgrade(triggerLayerID, 11)) {
-                    return 1; 
-                }
+            // Check if the current layer i is within the maximum automated depth.
+            if (i <= getMaxAutomatedLayer()) {
+                return 1;
             }
-
             return 0; 
         },
+        
         autoUpgrade() {
-            // Target layer i is automated by trigger layer T = (i + 1) * 5
-            let triggerLayerNum = (i + 1) * 5; 
-            
-            if (triggerLayerNum <= 100 && triggerLayerNum >= 10) {
-                let triggerLayerID = "layer" + triggerLayerNum;
-                if (player[triggerLayerID] && hasUpgrade(triggerLayerID, 11)) {
-                    return true;
-                }
+            // Check if the current layer i is within the maximum automated depth.
+            if (i <= getMaxAutomatedLayer()) {
+                return true;
             }
-            
             return false;
         },
 

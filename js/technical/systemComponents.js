@@ -217,8 +217,10 @@ var systemComponents = {
 				<td><button class="opt" onclick="save()">{{i18n('本地存档', 'Save', false)}}</button></td>
                 <td><button class="opt" onclick="toggleOpt('autosave')">{{i18n('自动存档', 'AutoSave', false)}}: {{ options.autosave?(i18n("已开启", "ON", false)):(i18n("已关闭", "OFF", false)) }}</button></td>
                 <td><button class="opt" onclick="hardReset()">{{i18n('硬重置(删除存档)', 'HardReset', false)}}</button></td>
-				<td><button class="opt" onclick="exportSave()">{{i18n('导出存档(复制到黏贴板)', 'Export', false)}}</button></td>
-				<td><button class="opt" onclick="importSave()">{{i18n('导入存档', 'Import', false)}}</button></td>
+				<td><button class="opt" onclick="exportSave()">{{i18n('导出存档(复制到黏贴板)', 'Export save to clipboard', false)}}</button></td>
+				<td><button class="opt" onclick="importSave()">{{i18n('导入存档', 'Import save from clipboard', false)}}</button></td>
+				<td><button class="opt" onclick="exportSaveToFile()">{{i18n('导出存档(复制到黏贴板)', 'Export save to file', false)}}</button></td>
+				<td><button class="opt" onclick="importSaveFromFile()">{{i18n('导入存档', 'Import save from file', false)}}</button></td>
 			</tr><br>
 			<tr>
 				<td><h1>{{i18n('优化', 'Qol', false)}}&nbsp;&nbsp;&nbsp;</h1></td>

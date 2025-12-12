@@ -1,5 +1,5 @@
 let modInfo = {
-	name: "The 100 Layer",
+	name: "100 Layers, 100 Upgrades",
 	id: "RD82:100LMT",
 	author: "Randim82",
 	pointsName: "points",
