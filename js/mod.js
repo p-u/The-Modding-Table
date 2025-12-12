@@ -1,18 +1,14 @@
 let modInfo = {
-	name: "The ??? Table",
-	nameI18N: "The ??? Table",// When you enabled the internationalizationMod, this is the name in the second language
-	id: "mymod2",
-	author: "nobody",
+	name: "The 100 Layer",
+	id: "RD82:100LMT",
+	author: "Randim82",
 	pointsName: "points",
 	modFiles: ["layers.js", "tree.js"],
 
 	internationalizationMod: false,
-	// When enabled, it will ask the player to choose a language at the beginning of the game
 	changedDefaultLanguage: false,
-	// Changes the mod default language. false -> English, true -> Chinese
-
-	initialStartPoints: new Decimal (10), // Used for hard resets and new players
-	offlineLimit: 1,  // In hours
+	initialStartPoints: new Decimal (0), // Used for hard resets and new players
+	offlineLimit: 0,  // In hours
 }
 
 var colors = {
@@ -41,30 +37,16 @@ function hiddenLeftTable(){
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0",
+	num: "1.0",
 	name: "Literally nothing",
 }
 
 function changelog(){
-	return i18n(`
-		<br><br><br><h1>更新日志:</h1><br>(不存在<span style='color: red'><s>剧透警告</s></span>)<br><br>
-		<span style="font-size: 17px;">
-			<h3><s>你应该自己写这个</s></h3><br><br>
-			<h3>v3.0 - 史无前例的改动</h3><br>
-				- 开发了 The Modding Table, 这何尝不是一种TMT<br>
-			<br><br>
-		`, `
-		<br><br><br><h1>ChangeLog:</h1><br>(No<span style='color: red'><s> Spoiler Warning!</s></span>)<br><br>
-		<span style="font-size: 17px;">
-			<h3><s>YOU SHOULD WRITE THIS YOURSELF</s></h3><br><br>
-			<h3>v3.0 - Unprecedented changes</h3><br>
-				- Developed The Modding Table, Which, you could say, is another form of TMT<br>
-			<br><br>
-	`, false)
+	return ""
 } 
 
 function winText(){
-	return i18n(`你暂时完成了游戏!`, `Congratulations! You have reached the end and beaten this game, but for now...`, false)
+	return "Congratulations! You have reached the end and beaten this game, but for now..."
 }
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
@@ -82,10 +64,41 @@ function canGenPoints(){
 
 // Calculate points/sec!
 function getPointGen() {
-	if(!canGenPoints())
-		return new Decimal(0)
-
+	if(!canGenPoints()) return new Decimal(0)
 	let gain = new Decimal(1)
+
+    // 1. Standard Layer 1 Check (x3)
+    if (hasUpgrade("layer1", 11)) gain = gain.times(3)
+
+    // 2. Loop through all Layers checking for buff rules targeting "Points" (Layer 0)
+    // Layer 5 buffs 0. Layer 10 buffs 0. Layer 15 buffs 0.
+    for (let layerNum = 4; layerNum <= 100; layerNum += 4) {
+        
+        // Calculate what the multiplier *should* be for this offset
+        // Since Points are "0", the offset is equal to the layer number itself.
+        // e.g. Layer 5 is offset 5 away from 0.
+        let multVal = 0;
+        
+        // Fixed Rules
+        if (layerNum === 4) multVal = 2;
+        else if (layerNum === 8) multVal = 3;
+        else if (layerNum === 12) multVal = 5;
+        else if (layerNum === 16) multVal = 7;
+        else if (layerNum === 20) multVal = 10;
+        else if (layerNum === 24) multVal = 12;
+        else if (layerNum === 28) multVal = 15;
+        else if (layerNum === 32) multVal = 16;
+        else if (layerNum === 36) multVal = 18;
+        else if (layerNum === 40) multVal = 20;
+        // Dynamic Rules (40+)
+        else if (layerNum >= 40) multVal = layerNum / 2;
+        // Apply
+        if (multVal > 0) {
+            if (player["layer" + layerNum] && hasUpgrade("layer" + layerNum, 11)) {
+                gain = gain.times(multVal);
+            }
+        }
+    }
 	return gain
 }
 
@@ -96,8 +109,7 @@ function addedPlayerData() { return {
 // Display extra information at the top of the page
 var displayThings = [
 	function() {
-		if(options.ch==undefined && modInfo.internationalizationMod==true){return '<big><br>You should choose your language first<br>你需要先选择语言</big>'}
-		return '<div class="res">'+displayThingsRes()+'</div><br><div class="vl2"></div></span>'
+		return ""
 	}
 ]
 

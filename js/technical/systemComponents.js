@@ -197,19 +197,9 @@ var systemComponents = {
 			<h6 style="color:#aaa">({{i18n("其实也可以点右上角的版本号", "The Top-Right Version Button Matters", false)}})</h6>
 		</div>
 		<div style="border: 3px solid #888; width:300px; height:30px; margin-top: 8px; padding:15px; border-radius: 5px; display: inline-table">
-			<h3>{{i18n("辉影神秘的Discord", "Shinwmyste's Discord", false)}}:</h3><br>
-			<a class="link" href="https://discord.gg/DTJYvatRQA" target="_blank">{{i18n("点击跳转", "Click Here", false)}}</a><br>
+			<h3>{{i18n("Discord", "Discord", false)}}:</h3><br>
+			<a class="link" href="https://discord.gg/RRK9Dwzf6P" target="_blank">{{i18n("点击跳转", "Click Here", false)}}</a><br>
 			<h6 style="color:#aaa">({{i18n("加入DC群", "Join Discord", false)}})</h6>
-		</div>
-		<div style="border: 3px solid #888; width:300px; height:30px; margin-top: 8px; padding:15px; border-radius: 5px; display: inline-table">
-			<h3>{{i18n("QQ群", "QQ Group", false)}}:</h3><br>
-			<a class="link" href="https://qm.qq.com/q/axo4Pc8xvG" target="_blank">{{i18n("点击跳转", "Click Here", false)}}</a><br>
-			<h6 style="color:#aaa"><s>({{i18n("快点来,非常好玩(确信)", "I know you dont use this", false)}})</s></h6>
-		</div>
-		<div style="border: 3px solid #888; width:300px; height:30px; margin-top: 8px; padding:15px; border-radius: 5px; display: inline-table">
-			<h3>{{i18n("捐助页面", "Donate Page", false)}}:</h3><br>
-			<a class="link" href="https://afdian.com/a/Shinwmyste" target="_blank">{{i18n("点击跳转", "Click Here", false)}}</a><br>
-			<h6 style="color:#aaa">($_$)</h6>
 		</div>
 		<div style="border: 3px solid #888; width:300px; height:30px; margin-top: 8px; padding:15px; border-radius: 5px; display: inline-table">
 			<h3>{{i18n("模组树Discord", "The Modding Tree Discord", false)}}:</h3><br>
