@@ -62,24 +62,17 @@ function canGenPoints(){
 	return true
 }
 
-// Calculate points/sec!
+
 function getPointGen() {
 	if(!canGenPoints()) return new Decimal(0)
 	let gain = new Decimal(1)
 
-    // 1. Standard Layer 1 Check (x3)
     if (hasUpgrade("layer1", 11)) gain = gain.times(3)
 
-    // 2. Loop through all Layers checking for buff rules targeting "Points" (Layer 0)
-    // Layer 5 buffs 0. Layer 10 buffs 0. Layer 15 buffs 0.
     for (let layerNum = 4; layerNum <= 100; layerNum += 4) {
         
-        // Calculate what the multiplier *should* be for this offset
-        // Since Points are "0", the offset is equal to the layer number itself.
-        // e.g. Layer 5 is offset 5 away from 0.
         let multVal = 0;
         
-        // Fixed Rules
         if (layerNum === 4) multVal = 2;
         else if (layerNum === 8) multVal = 3;
         else if (layerNum === 12) multVal = 5;
@@ -90,9 +83,7 @@ function getPointGen() {
         else if (layerNum === 32) multVal = 16;
         else if (layerNum === 36) multVal = 18;
         else if (layerNum === 40) multVal = 20;
-        // Dynamic Rules (40+)
         else if (layerNum >= 40) multVal = layerNum / 2;
-        // Apply
         if (multVal > 0) {
             if (player["layer" + layerNum] && hasUpgrade("layer" + layerNum, 11)) {
                 gain = gain.times(multVal);

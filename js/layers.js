@@ -14,7 +14,7 @@ const fixedRules = [
 function getMultForOffset(offset) {
     let rule = fixedRules.find(r => r.offset === offset);
     if (rule) return rule.mult;
-    if (offset >= 44 && offset % 4 === 0) {
+    if (offset >= 40 && offset % 4 === 0) {
         return offset / 2;
     }
     return 0;
@@ -22,10 +22,10 @@ function getMultForOffset(offset) {
 
 function getMaxAutomatedLayer() {
     let maxAutomated = 0;
-    for (let T = 10; T <= 100; T++) {
+    for (let T = 5; T <= 100; T++) {
         let triggerLayerID = "layer" + T;
         if (player[triggerLayerID] && hasUpgrade(triggerLayerID, 11)) {
-            let currentLayerAutomated = Math.floor((T - 5) / 5);
+            let currentLayerAutomated = Math.floor(T / 5);
             
             if (currentLayerAutomated > maxAutomated) {
                 maxAutomated = currentLayerAutomated;
@@ -67,8 +67,8 @@ for (let i = 1; i <= 100; i++) {
             upgradeDesc += ` Also x${mult} ${targetName} gain.`;
         }
     }
-    if (i >= 10) {
-        let maxTargetLayer = Math.floor((i - 5) / 5); 
+    if (i >= 5) {
+        let maxTargetLayer = Math.floor(i / 5); 
         if (maxTargetLayer >= 1) {
              let targetRange;
              if (maxTargetLayer === 1) {
@@ -104,6 +104,10 @@ for (let i = 1; i <= 100; i++) {
             },
         },
         tabFormat: [
+            ["row", [
+                ["clickable", 11], 
+                ["clickable", 12], 
+            ]],
             ["display-text", function() { return getPointsDisplay() }],
             "main-display",
             "prestige-button",
@@ -114,7 +118,7 @@ for (let i = 1; i <= 100; i++) {
         tooltip(){return false},
         color: getRandomColor(),
         
-        requires: new Decimal(5), 
+        requires: new Decimal(4).add(Decimal.floor(i/25)), 
         
         resource: "layer " + i + " points",
         baseResource: (i === 1) ? "points" : "layer" + (i - 1) + " points",
@@ -130,9 +134,7 @@ for (let i = 1; i <= 100; i++) {
         
         layerShown() { return true },
 
-        // 4. Automation and Passive Generation Logic
         passiveGeneration() {
-            // Check if the current layer i is within the maximum automated depth.
             if (i <= getMaxAutomatedLayer()) {
                 return 1;
             }
@@ -140,7 +142,6 @@ for (let i = 1; i <= 100; i++) {
         },
         
         autoUpgrade() {
-            // Check if the current layer i is within the maximum automated depth.
             if (i <= getMaxAutomatedLayer()) {
                 return true;
             }
@@ -150,13 +151,10 @@ for (let i = 1; i <= 100; i++) {
         gainMult() {
             let mult = new Decimal(1);
 
-            // A. Check Immediate Previous Layer (Standard x3)
             if (player["layer" + (i + 1)] && hasUpgrade("layer" + (i + 1), 11)) {
                 mult = mult.times(3);
             }
 
-            // B. Check All "Future" Layers based on offsets
-            // Note: Your fixed rules use offsets in steps of 4 (4, 8, 12...)
             for (let off = 4; (i + off) <= 100; off += 4) {
                 let futureLayerID = "layer" + (i + off);
                 let multiplier = getMultForOffset(off);
@@ -177,12 +175,54 @@ for (let i = 1; i <= 100; i++) {
         upgrades: {
             11: {
                 title: "Multiplier Boost",
-                description: upgradeDesc, // Use the dynamically generated string
+                description: upgradeDesc, 
                 cost: new Decimal(1), 
                 style() {return {
                     'width': '1000px',
                     'height': '100px',
                 }},
+            },
+        },
+        
+        clickables: {
+            11: { // Back
+                title: "◄ Previous Layer",
+                display() {
+                    let target = i - 1;
+                    return `Go to Layer ${target}`;
+                },
+                unlocked() {
+                    return i > 1;
+                },
+                onClick() {
+                    showTab("layer" + (i - 1));
+                },
+                canClick() {
+                    return true;
+                },
+                style() {
+                    return {'width': '150px', 'height': '50px', 'background-color': '#0099cc'};
+                }
+            },
+            12: { // Forward
+                title: "Next Layer ►",
+                display() {
+                    let target = i + 1;
+                    return `Go to Layer ${target}`;
+                },
+                unlocked() {
+                    return i < 100;
+                },
+                onClick() {
+                    const targetLayerID = "layer" + (i + 1);
+                    showTab(targetLayerID)
+                },
+                canClick() {
+                    return true;
+                },
+                style() {
+                    return {'width': '150px', 'height': '50px', 'background-color': '#0099cc'};
+                }
             },
         },
     });
