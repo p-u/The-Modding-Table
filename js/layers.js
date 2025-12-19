@@ -1,6 +1,6 @@
 const fixedRules = [
-    { offset: 4, mult: 2 },
-    { offset: 8, mult: 3 },
+    { offset: 4, mult: 3 },
+    { offset: 8, mult: 4 },
     { offset: 12, mult: 5 },
     { offset: 16, mult: 7 },
     { offset: 20, mult: 10 },
