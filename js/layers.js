@@ -67,8 +67,8 @@ for (let i = 1; i <= 100; i++) {
             upgradeDesc += ` Also x${mult} ${targetName} gain.`;
         }
     }
-    if (i >= 5) {
-        let maxTargetLayer = Math.floor(i / 5); 
+    if (i >= 6) {
+        let maxTargetLayer = Math.floor((i / 3) -1); 
         if (maxTargetLayer >= 1) {
              let targetRange;
              if (maxTargetLayer === 1) {
