@@ -22,10 +22,10 @@ function getMultForOffset(offset) {
 
 function getMaxAutomatedLayer() {
     let maxAutomated = 0;
-    for (let T = 5; T <= 100; T++) {
+    for (let T = 6; T <= 100; T++) {
         let triggerLayerID = "layer" + T;
         if (player[triggerLayerID] && hasUpgrade(triggerLayerID, 11)) {
-            let currentLayerAutomated = Math.floor(T / 5);
+            let currentLayerAutomated = (Math.floor(T / 3)-1);
             
             if (currentLayerAutomated > maxAutomated) {
                 maxAutomated = currentLayerAutomated;
