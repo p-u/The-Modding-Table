@@ -118,7 +118,7 @@ for (let i = 1; i <= 100; i++) {
         tooltip(){return false},
         color: getRandomColor(),
         
-        requires: new Decimal(4).add(Decimal.floor(i/25)), 
+        requires: new Decimal(3).add(Decimal.floor(i/25)), 
         
         resource: "layer " + i + " points",
         baseResource: (i === 1) ? "points" : "layer" + (i - 1) + " points",
